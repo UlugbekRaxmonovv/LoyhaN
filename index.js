@@ -1,27 +1,24 @@
-import express  from 'express'
-import path, {dirname} from 'path'
-import {fileURLToPath} from 'url'
-import {engine} from 'express-handlebars'
+import express from "express";
+import { create } from "express-handlebars";
+import AuthRoutes  from './routes/auth.js'
+import Products from './routes/products.js'
+const app = express();
 
-const __fileName = fileURLToPath(import.meta.url)
-const __dirname =  dirname(__fileName)
+const hbs = create({
+  defaultLayout: "main",
+  extname: "hbs",
+});
+
+app.engine("hbs", hbs.engine);
+app.set("view engine", "hbs");
+app.set("views", "./views");
+
+app.use(AuthRoutes)
+app.use(Products)
 
 
-const app = express()
-
-app.engine('handlebars',engine())
-app.set('view engine', 'handlebars');
-app.set('views', './views');
-
-app.get('/', (req,res) =>{
-    res.render('index')
-})
 
 
-app.get('/about', (req,res) =>{
-    res.render('about')
-})
 
-const PORT = process.env.PORT || 4100
-app.listen(PORT, () => console.log(`Server is running ${PORT}`)
-)
+const PORT = process.env.PORT || 4100;
+app.listen(PORT, () => console.log(`Server is running ${PORT}`));
